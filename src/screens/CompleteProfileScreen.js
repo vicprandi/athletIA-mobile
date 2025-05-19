@@ -1,3 +1,4 @@
+import { API_URL } from '@env';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
@@ -9,12 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuth } from '../contexts/AuthContexts';
 import { authStyles as styles } from '../styles/authStyles';
 
-const API_URL = 'http://192.168.5.157:8080';
+function formatDate(input) {
+  const [day, month, year] = input.split('/');
+  return `${year}-${month}-${day}`;
+}
 
-export default function CompleteProfileScreen({ route, navigation }) {
-  const { token } = route.params || {};
+export default function CompleteProfileScreen({ navigation }) {
+  const { token } = useAuth(); 
 
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -23,36 +28,39 @@ export default function CompleteProfileScreen({ route, navigation }) {
   const [level, setLevel] = useState('BEGINNER');
   const [goal, setGoal] = useState('HYPERTROPHY');
 
-  async function handleSubmit() {
-    try {
-      const payload = {
-        height: parseFloat(height),
-        weight: parseFloat(weight),
-        birthDate,
-        gender,
-        level,
-        goal,
-      };
+async function handleSubmit() {
+  try {
+    const payload = {
+      height: parseFloat(height),
+      weight: parseFloat(weight),
+      birthDate: formatDate(birthDate),
+      gender: gender.toUpperCase(),
+      level: level.toUpperCase(),
+      goal: goal.toUpperCase(),
+    };
 
-      const response = await fetch(`${API_URL}/users/me`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+    console.log("TOKEN ATUAL:", token);
 
-      const text = await response.text();
-      if (!response.ok) throw new Error(text || 'Erro ao atualizar perfil');
+    const response = await fetch(`${API_URL}/users/me`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-      Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
-      navigation.replace('Home');
-    } catch (error) {
-      console.error('Erro ao enviar dados:', error);
-      Alert.alert('Erro', error.message || 'Erro inesperado');
-    }
+    const text = await response.text();
+    if (!response.ok) throw new Error(text || 'Erro ao atualizar perfil');
+
+    Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+    navigation.replace('Home');
+  } catch (error) {
+    console.error('Erro ao enviar dados:', error);
+    Alert.alert('Erro', error.message || 'Erro inesperado');
   }
+}
+
 
   const Option = ({ label, value, selected, setSelected }) => (
     <TouchableOpacity
@@ -111,6 +119,7 @@ export default function CompleteProfileScreen({ route, navigation }) {
           />
         </View>
 
+        {/* Gênero */}
         <Text style={ui.label}>Gênero</Text>
         <View style={ui.selectGroup}>
           <Option label="Feminino" value="FEMALE" selected={gender} setSelected={setGender} />
@@ -118,6 +127,7 @@ export default function CompleteProfileScreen({ route, navigation }) {
           <Option label="Outro" value="OTHER" selected={gender} setSelected={setGender} />
         </View>
 
+        {/* Nível */}
         <Text style={ui.label}>Nível de treino</Text>
         <View style={ui.selectGroup}>
           <Option label="Iniciante" value="BEGINNER" selected={level} setSelected={setLevel} />
@@ -125,11 +135,12 @@ export default function CompleteProfileScreen({ route, navigation }) {
           <Option label="Avançado" value="ADVANCED" selected={level} setSelected={setLevel} />
         </View>
 
+        {/* Objetivo */}
         <Text style={ui.label}>Objetivo</Text>
         <View style={ui.selectGroup}>
           <Option label="Hipertrofia" value="HYPERTROPHY" selected={goal} setSelected={setGoal} />
-          <Option label="Emagrecimento" value="FAT_LOSS" selected={goal} setSelected={setGoal} />
-          <Option label="Resistência" value="ENDURANCE" selected={goal} setSelected={setGoal} />
+          <Option label="Emagrecimento" value="WEIGHT_LOSS" selected={goal} setSelected={setGoal} />
+          <Option label="Resistência" value="RESISTANCE" selected={goal} setSelected={setGoal} />
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -158,7 +169,7 @@ const ui = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1C1C1E',
     paddingVertical: 10,
-    paddingHorizontal: 8, // menor padding lateral
+    paddingHorizontal: 8,
     borderRadius: 12,
     borderColor: '#2C2C2E',
     borderWidth: 1.4,

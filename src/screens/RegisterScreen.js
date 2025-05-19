@@ -16,6 +16,7 @@ export default function RegisterScreen({ navigation }) {
   const [senha, setSenha] = useState('');
   const [nome, setNome] = useState('');
   const [username, setUsername] = useState('');
+  const [focusedField, setFocusedField] = useState(null);
 
   const [emailError, setEmailError] = useState('');
   const [usernameError, setUsernameError] = useState('');
@@ -27,9 +28,7 @@ export default function RegisterScreen({ navigation }) {
     try {
       const response = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: nome,
           username: username,
@@ -70,10 +69,15 @@ export default function RegisterScreen({ navigation }) {
       Alert.alert('Conta criada!', 'Agora é só fazer login.');
       navigation.replace('Login');
     } catch (error) {
-      Alert.alert('Erro', 'Erro de conexão com o servidor.');
       console.error(error);
+      Alert.alert('Erro', 'Erro de conexão com o servidor.');
     }
   }
+
+  const getInputStyle = (fieldName) => [
+    styles.input,
+    focusedField === fieldName && styles.inputFocused,
+  ];
 
   return (
     <View style={styles.container}>
@@ -85,9 +89,11 @@ export default function RegisterScreen({ navigation }) {
           <TextInput
             placeholder="Nome"
             placeholderTextColor="#aaa"
-            style={styles.input}
             value={nome}
             onChangeText={setNome}
+            style={getInputStyle('nome')}
+            onFocus={() => setFocusedField('nome')}
+            onBlur={() => setFocusedField(null)}
           />
         </View>
 
@@ -97,13 +103,15 @@ export default function RegisterScreen({ navigation }) {
           <TextInput
             placeholder="Username"
             placeholderTextColor="#aaa"
-            style={styles.input}
             value={username}
             onChangeText={(text) => {
               setUsername(text);
               setUsernameError('');
             }}
             autoCapitalize="none"
+            style={getInputStyle('username')}
+            onFocus={() => setFocusedField('username')}
+            onBlur={() => setFocusedField(null)}
           />
         </View>
 
@@ -113,7 +121,6 @@ export default function RegisterScreen({ navigation }) {
           <TextInput
             placeholder="Email"
             placeholderTextColor="#aaa"
-            style={styles.input}
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -121,6 +128,9 @@ export default function RegisterScreen({ navigation }) {
             }}
             keyboardType="email-address"
             autoCapitalize="none"
+            style={getInputStyle('email')}
+            onFocus={() => setFocusedField('email')}
+            onBlur={() => setFocusedField(null)}
           />
         </View>
 
@@ -130,9 +140,11 @@ export default function RegisterScreen({ navigation }) {
             placeholder="Senha"
             placeholderTextColor="#aaa"
             secureTextEntry
-            style={styles.input}
             value={senha}
             onChangeText={setSenha}
+            style={getInputStyle('senha')}
+            onFocus={() => setFocusedField('senha')}
+            onBlur={() => setFocusedField(null)}
           />
         </View>
 

@@ -1,3 +1,4 @@
+import { API_URL } from '@env';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
@@ -7,10 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuth } from '../contexts/AuthContexts';
 import { authStyles as styles } from '../styles/authStyles';
-const API_URL = 'http://192.168.5.157:8080';
 
 export default function LoginScreen({ navigation }) {
+  const { setToken } = useAuth();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
@@ -22,13 +24,22 @@ export default function LoginScreen({ navigation }) {
         body: JSON.stringify({ email, password: senha }),
       });
 
-      if (!response.ok) throw new Error(await response.text());
+      const text = await response.text();
+      const data = JSON.parse(text);
 
-      const data = await response.json();
-      Alert.alert('Login realizado!', `Token: ${data.token}`);
-      navigation.replace('CompleteProfile', { token: data.token });
+      if (!response.ok) {
+        throw new Error(data.message || 'Erro ao fazer login');
+      }
+
+      if (!data.token) {
+        throw new Error('Token JWT não recebido');
+      }
+
+      setToken(data.token);
+      Alert.alert('Login realizado!');
+      navigation.replace('CompleteProfile');
     } catch (error) {
-      Alert.alert('Erro', error.message);
+      Alert.alert('Erro', error.message || 'Erro de conexão');
     }
   }
 

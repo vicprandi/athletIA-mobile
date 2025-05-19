@@ -47,6 +47,14 @@ export const authStyles = StyleSheet.create({
     height: 50,
     color: '#E5E5E5',
     fontSize: 16,
+    backgroundColor: 'transparent',
+    caretColor: '#22C55E',
+    transitionDuration: '0s', // evita fade branco
+  },
+  inputFocused: {
+    borderColor: '#22C55E',
+    borderWidth: 1.6,
+    backgroundColor: '#1C1C1E',
   },
   button: {
     width: '100%',
@@ -78,14 +86,14 @@ export const authStyles = StyleSheet.create({
     opacity: 0.9,
   },
   errorText: {
-  color: '#ff6b6b',
-  fontSize: 13,
-  marginBottom: 4,
-  marginLeft: 4,
-  fontWeight: '500',
+    color: '#ff6b6b',
+    fontSize: 13,
+    marginBottom: 4,
+    marginLeft: 4,
+    fontWeight: '500',
   },
   errorBorder: {
     borderColor: '#ff6b6b',
     borderWidth: 1.6,
-},
+  },
 });
