@@ -1,6 +1,6 @@
 import { API_URL } from '@env';
 import { Ionicons } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
@@ -15,6 +15,7 @@ import { useAuth } from '../contexts/AuthContexts';
 
 export default function WorkoutPlanScreen() {
   const route = useRoute();
+  const navigation = useNavigation();
   const { planId } = route.params;
   const { token } = useAuth();
   const [exercises, setExercises] = useState([]);
@@ -88,6 +89,11 @@ export default function WorkoutPlanScreen() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={20} color="#22C55E" />
+        <Text style={styles.backText}>Voltar</Text>
+      </TouchableOpacity>
+
       <Text style={styles.header}>📋 Seu plano de treino</Text>
 
       {loading ? (
@@ -111,6 +117,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0D0D0D',
     padding: 24,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  backText: {
+    color: '#22C55E',
+    fontSize: 15,
+    marginLeft: 4,
+    fontWeight: '500',
   },
   header: {
     fontSize: 26,
