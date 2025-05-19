@@ -1,5 +1,6 @@
 import { API_URL } from '@env';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import {
   Alert,
@@ -12,9 +13,20 @@ import { useAuth } from '../contexts/AuthContexts';
 import { authStyles as styles } from '../styles/authStyles';
 
 export default function LoginScreen({ navigation }) {
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+
+  function hasCompleteProfile(user) {
+    return (
+      user.height &&
+      user.weight &&
+      user.birthDate &&
+      user.gender &&
+      user.goal &&
+      user.level
+    );
+  }
 
   async function handleLogin() {
     try {
@@ -35,9 +47,29 @@ export default function LoginScreen({ navigation }) {
         throw new Error('Token JWT não recebido');
       }
 
+      // Salva token no AuthContext e no AsyncStorage
       setToken(data.token);
+      await AsyncStorage.setItem('token', data.token);
+
+      // Busca o perfil do usuário autenticado
+      const userRes = await fetch(`${API_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${data.token}` },
+      });
+
+      if (!userRes.ok) {
+        throw new Error('Erro ao buscar perfil do usuário');
+      }
+
+      const userData = await userRes.json();
+      setUser(userData);
+
       Alert.alert('Login realizado!');
-      navigation.replace('CompleteProfile');
+
+      if (hasCompleteProfile(userData)) {
+        navigation.replace('Home');
+      } else {
+        navigation.replace('CompleteProfile');
+      }
     } catch (error) {
       Alert.alert('Erro', error.message || 'Erro de conexão');
     }
