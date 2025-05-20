@@ -2,9 +2,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CompleteProfileScreen from '../screens/CompleteProfileScreen';
+import EditProfileScreen from "../screens/EditProfileScreen";
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import ViewProfileScreen from '../screens/ViewProfileScreen';
 import WorkoutPlanScreen from '../screens/WorkoutPlanScreen';
 
 const Stack = createNativeStackNavigator();
@@ -18,6 +20,8 @@ export default function AppRoutes() {
         <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="WorkoutPlan" component={WorkoutPlanScreen} />
+        <Stack.Screen name="ViewProfile" component={ViewProfileScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -47,7 +47,6 @@ export const authStyles = StyleSheet.create({
     height: 50,
     color: '#E5E5E5',
     fontSize: 16,
-    backgroundColor: 'transparent',
     caretColor: '#22C55E',
     transitionDuration: '0s', // evita fade branco
   },

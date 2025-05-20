@@ -38,55 +38,49 @@ export default function HomeScreen() {
   };
 
   const goToExistingPlan = async () => {
-  try {
-    const res = await fetch(`${API_URL}/workout-plans`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!res.ok) throw new Error('Erro ao buscar planos');
-
-    const plans = await res.json();
-
-    if (plans.length === 0) {
-      Alert.alert('Aviso', 'Você ainda não possui planos de treino.');
-      return;
+    try {
+      const res = await fetch(`${API_URL}/workout-plans`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error('Erro ao buscar planos');
+      const plans = await res.json();
+      if (plans.length === 0) {
+        Alert.alert('Aviso', 'Você ainda não possui planos de treino.');
+        return;
+      }
+      const latestPlan = plans[plans.length - 1];
+      navigation.navigate('WorkoutPlan', { planId: latestPlan.id });
+    } catch (err) {
+      Alert.alert('Erro', err.message);
     }
+  };
 
-    const latestPlan = plans[plans.length - 1]; // ou escolha outro critério
-
-    navigation.navigate('WorkoutPlan', { planId: latestPlan.id });
-  } catch (err) {
-    Alert.alert('Erro', err.message);
-  }
-};
-
+  const handleLogout = async () => {
+    await logout(); // limpa token e user
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Olá, {user?.name?.toLowerCase() || 'atleta'} <Text style={styles.wave}>👋</Text></Text>
+      <Text style={styles.title}>
+        Olá, {user?.name?.toLowerCase() || 'atleta'}{' '}
+        <Text style={styles.wave}>👋</Text>
+      </Text>
       <Text style={styles.subtitle}>Pronta pra começar seu treino inteligente?</Text>
 
       <View style={styles.menu}>
-        <MenuButton
-          icon="sparkles-outline"
-          label="Gerar plano com IA"
-          onPress={generateWorkoutPlan}
-        />
-        <MenuButton
-          icon="list-outline"
-          label="Ver planos existentes"
-          onPress={goToExistingPlan}
-        />
-        <MenuButton
-          icon="add-circle-outline"
-          label="Nova sessão de treino"
-          onPress={() => navigation.navigate('WorkoutSessionForm')}
-        />
+        <MenuButton icon="sparkles-outline" label="Gerar plano com IA" onPress={generateWorkoutPlan} />
+        <MenuButton icon="list-outline" label="Ver planos existentes" onPress={goToExistingPlan} />
+        <MenuButton icon="add-circle-outline" label="Nova sessão de treino" onPress={() => navigation.navigate('WorkoutSessionForm')} />
+        <MenuButton icon="person-outline" label="Ver perfil" onPress={() => navigation.navigate('ViewProfile')} />
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={18} color="#ef4444" />
         <Text style={styles.logoutText}>Sair</Text>
       </TouchableOpacity>
