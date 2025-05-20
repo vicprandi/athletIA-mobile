@@ -29,31 +29,11 @@ export default function HomeScreen() {
       const data = await response.json();
       const planId = data.id;
       await AsyncStorage.setItem('lastPlanId', planId);
-      navigation.navigate('WorkoutPlan', { planId });
+      Alert.alert('🎉 Plano gerado com sucesso!', 'Confira em "Ver planos existentes".');
     } catch (err) {
       Alert.alert('Erro', err.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const goToExistingPlan = async () => {
-    try {
-      const res = await fetch(`${API_URL}/workout-plans`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) throw new Error('Erro ao buscar planos');
-      const plans = await res.json();
-      if (plans.length === 0) {
-        Alert.alert('Aviso', 'Você ainda não possui planos de treino.');
-        return;
-      }
-      const latestPlan = plans[plans.length - 1];
-      navigation.navigate('WorkoutPlan', { planId: latestPlan.id });
-    } catch (err) {
-      Alert.alert('Erro', err.message);
     }
   };
 
@@ -71,7 +51,7 @@ export default function HomeScreen() {
 
       <View style={styles.menu}>
         <MenuButton icon="sparkles-outline" label="Gerar plano com IA" onPress={generateWorkoutPlan} />
-        <MenuButton icon="list-outline" label="Ver planos existentes" onPress={goToExistingPlan} />
+        <MenuButton icon="list-outline" label="Ver planos existentes" onPress={() => navigation.navigate('WorkoutPlanList')} />
         <MenuButton icon="add-circle-outline" label="Nova sessão de treino" onPress={() => navigation.navigate('WorkoutSessionForm')} />
         <MenuButton icon="person-outline" label="Ver perfil" onPress={() => navigation.navigate('ViewProfile')} />
       </View>

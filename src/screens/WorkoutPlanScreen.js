@@ -3,13 +3,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContexts';
 
@@ -67,19 +67,17 @@ export default function WorkoutPlanScreen() {
             <Ionicons name="barbell-outline" size={18} /> {item.exercise.name}
           </Text>
           <Text style={styles.muscleGroup}>{item.exercise.muscleGroup}</Text>
+          <Text style={styles.details}>
+            {item.sets}x{item.reps} • {item.restSeconds}s descanso
+          </Text>
+            {typeof item.suggestedLoad === 'number' && item.suggestedLoad > 0 && (
+          <Text style={styles.load}>Carga sugerida: {item.suggestedLoad} kg</Text>
+        )}
         </View>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>
           <Ionicons name="trash-outline" size={22} color="#f87171" />
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.details}>
-        {item.sets}x{item.reps} • {item.restSeconds}s descanso
-      </Text>
-
-      {item.suggestedLoad ? (
-        <Text style={styles.load}>Carga sugerida: {item.suggestedLoad} kg</Text>
-      ) : null}
 
       {item.exercise.description && (
         <Text style={styles.description}>{item.exercise.description}</Text>
@@ -146,8 +144,8 @@ const styles = StyleSheet.create({
   },
   cardTop: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   exerciseName: {
     fontSize: 17,
@@ -161,14 +159,14 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   details: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#A1A1AA',
-    marginTop: 4,
+    marginTop: 6,
   },
   load: {
     fontSize: 13,
     color: '#FACC15',
-    marginTop: 4,
+    marginTop: 2,
   },
   description: {
     fontSize: 12,

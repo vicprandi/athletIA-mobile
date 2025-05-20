@@ -4,13 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContexts';
 
@@ -20,7 +20,7 @@ export default function ViewProfileScreen() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async () => {    
+  const fetchProfile = async () => {
     try {
       const res = await fetch(`${API_URL}/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +81,7 @@ export default function ViewProfileScreen() {
 
       <TouchableOpacity
         style={styles.editBtn}
-        onPress={() => navigation.navigate('EditProfile')}
+        onPress={() => navigation.navigate('EditProfile', { profile })}
       >
         <Ionicons name="create-outline" size={18} color="#22C55E" />
         <Text style={styles.editText}>Editar informações</Text>

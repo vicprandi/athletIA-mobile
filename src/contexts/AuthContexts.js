@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react';
 
-// 👇 ISSO AQUI FALTAVA
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
