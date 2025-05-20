@@ -58,11 +58,7 @@ export default function HomeScreen() {
   };
 
   const handleLogout = async () => {
-    await logout(); // limpa token e user
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+    await logout();
   };
 
   return (

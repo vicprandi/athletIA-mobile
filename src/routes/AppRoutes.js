@@ -1,28 +1,36 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuth } from '../contexts/AuthContexts';
 
-import CompleteProfileScreen from '../screens/CompleteProfileScreen';
-import EditProfileScreen from "../screens/EditProfileScreen";
+// Importa suas telas
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ViewProfileScreen from '../screens/ViewProfileScreen';
 import WorkoutPlanScreen from '../screens/WorkoutPlanScreen';
+import WorkoutSessionFormScreen from '../screens/WorkoutSessionFormScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppRoutes() {
+  const { token } = useAuth();
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="WorkoutPlan" component={WorkoutPlanScreen} />
-        <Stack.Screen name="ViewProfile" component={ViewProfileScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-
+        {token ? (
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="WorkoutPlan" component={WorkoutPlanScreen} />
+            <Stack.Screen name="ViewProfile" component={ViewProfileScreen} />
+            <Stack.Screen name="WorkoutSessionForm" component={WorkoutSessionFormScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
