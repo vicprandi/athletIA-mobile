@@ -4,15 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContexts';
 
@@ -20,7 +20,7 @@ const genderOptions = ['MALE', 'FEMALE', 'OTHER'];
 const goalOptions = ['HYPERTROPHY', 'WEIGHT_LOSS', 'RESISTANCE'];
 const levelOptions = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
 
-export default function EditProfileScreen() {
+export default function EditProfileScreen({ route }) {
   const { token } = useAuth();
   const navigation = useNavigation();
   const [form, setForm] = useState({
@@ -62,7 +62,12 @@ export default function EditProfileScreen() {
 
       if (!res.ok) throw new Error('Erro ao atualizar perfil');
       Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
-      navigation.goBack();
+      if (route.params?.fromRegister) {
+        navigation.replace('Login');
+      } else {
+        navigation.goBack();
+      }
+
     } catch (err) {
       Alert.alert('Erro', err.message);
     }
@@ -175,87 +180,100 @@ function OptionSelector({ label, options, selected, onSelect }) {
 const styles = StyleSheet.create({
   avoider: {
     flex: 1,
-    backgroundColor: '#0D0D0D',
+    backgroundColor: '#0A0A0A',
   },
   background: {
     flex: 1,
-    backgroundColor: '#0D0D0D',
+    backgroundColor: '#0A0A0A',
   },
   container: {
     padding: 24,
     paddingBottom: 64,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '600',
+    fontSize: 26,
+    fontWeight: '700',
     color: '#FAFAFA',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
+    letterSpacing: 0.6,
   },
   card: {
-    borderRadius: 16,
-    padding: 18,
+    borderRadius: 18,
+    padding: 20,
     marginBottom: 32,
-    shadowColor: '#22C55E44',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
+    backgroundColor: '#121212',
+    shadowColor: '#22C55E',
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
   },
   inputGroup: {
-    marginBottom: 18,
+    marginBottom: 20,
   },
   inputLabel: {
     color: '#A1A1AA',
-    fontSize: 13,
+    fontSize: 14,
     marginBottom: 6,
     letterSpacing: 0.5,
+    fontWeight: '500',
   },
   input: {
-    backgroundColor: '#18181B',
-    borderRadius: 10,
-    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
-    paddingHorizontal: 14,
+    backgroundColor: '#1E1E20',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     color: '#FAFAFA',
     fontSize: 15,
-    borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderWidth: 1.5,
+    borderColor: '#2C2C2E',
   },
   optionsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    rowGap: 10,
+    columnGap: 8,
+    marginTop: 6,
   },
   optionButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 8,
-    borderWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1.4,
     borderColor: '#3F3F46',
-    backgroundColor: '#1A1A1A',
+    backgroundColor: '#191919',
+    minWidth: '30%',
+    alignItems: 'center',
   },
   optionSelected: {
-    backgroundColor: '#22C55E33',
+    backgroundColor: '#22C55E1A',
     borderColor: '#22C55E',
   },
   optionText: {
-    color: '#FAFAFA',
-    fontWeight: '500',
+    color: '#E4E4E7',
     fontSize: 14,
+    fontWeight: '500',
   },
   saveButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#22C55E',
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 14,
-    backgroundColor: '#141414',
-    gap: 8,
+    borderWidth: 1.5,
+    borderRadius: 14,
+    paddingVertical: 16,
+    backgroundColor: '#101010',
+    gap: 10,
+    shadowColor: '#22C55E',
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 3 },
   },
   saveText: {
     color: '#22C55E',
-    fontSize: 15,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 });

@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../contexts/AuthContexts';
 
 // Importa suas telas
-import CompleteProfileScreen from '../screens/CompleteProfileScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -27,7 +27,7 @@ export default function AppRoutes() {
             <Stack.Screen name="ViewProfile" component={ViewProfileScreen} />
             <Stack.Screen name="WorkoutSessionForm" component={WorkoutSessionFormScreen} />
             <Stack.Screen name="WorkoutPlanList" component={WorkoutPlanListScreen} />
-            <Stack.Screen name="EditProfile" component={CompleteProfileScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           </>
         ) : (
           <>

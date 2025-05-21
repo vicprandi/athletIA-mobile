@@ -68,13 +68,12 @@ async function handleLogin() {
     if (hasCompleteProfile(userData)) {
       navigation.replace('Home');
     } else {
-      navigation.replace('CompleteProfile');
+      navigation.replace('EditProfile');
     }
   } catch (error) {
     Alert.alert('Erro', error.message || 'Erro de conexão');
   }
 }
-
 
   return (
     <View style={styles.container}>

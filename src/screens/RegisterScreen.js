@@ -66,8 +66,8 @@ export default function RegisterScreen({ navigation }) {
         return;
       }
 
-      Alert.alert('Conta criada!', 'Agora é só fazer login.');
-      navigation.replace('Login');
+      Alert.alert('Conta criada!', 'Agora complete seu perfil.');
+      navigation.replace('EditProfile', { fromRegister: true });
     } catch (error) {
       console.error(error);
       Alert.alert('Erro', 'Erro de conexão com o servidor.');
